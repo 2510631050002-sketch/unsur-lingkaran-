@@ -1,26 +1,25 @@
 
 import streamlit as st
-import matplotlib.pyplot as plt
-import numpy as np
-from matplotlib.patches import Circle, Wedge
-from matplotlib.patches import Polygon
-
-# ==========================================
-# 1. KONFIGURASI APLIKASI
-# ==========================================
+import streamlit.components.v1 as components
 
 st.set_page_config(
-    page_title="Media Interaktif Lingkaran",
+    page_title="Mengenal Unsur Lingkaran",
     page_icon="⭕",
     layout="wide"
 )
 
-# ==========================================
-# 2. DESAIN APLIKASI
-# ==========================================
+# =========================
+# JUDUL APLIKASI
+# =========================
 
 st.markdown("""
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+html, body, [class*="css"] {
+    font-family: 'Nunito', sans-serif;
+}
+
 .stApp {
     background-color: #F7FAF5;
 }
@@ -29,677 +28,267 @@ h1, h2, h3 {
     color: #214D35;
 }
 
-.stButton button {
-    background-color: #DDEFE0;
-    color: #214D35;
-    border-radius: 10px;
-    border: 1px solid #B8D5BC;
-    font-weight: bold;
-}
-
-.stButton button:hover {
-    background-color: #C4E2CA;
-    color: #214D35;
-}
-
-.info-card {
-    background-color: #DDEFE0;
-    padding: 20px;
+.keterangan {
+    background: #E5F1E5;
+    padding: 18px;
     border-radius: 15px;
     color: #214D35;
-    margin-top: 10px;
+    margin-top: 12px;
 }
 </style>
 """, unsafe_allow_html=True)
 
-# ==========================================
-# 3. DATA UNSUR LINGKARAN
-# ==========================================
+st.title("⭕ Mengenal Unsur-Unsur Lingkaran")
+st.write(
+    "Ayo kenali bagian-bagian lingkaran! "
+    "Pilih salah satu unsur, kemudian amati bagian lingkaran "
+    "yang berkedip."
+)
+
+# =========================
+# DATA UNSUR LINGKARAN
+# =========================
 
 unsur = {
     "Titik Pusat": {
-        "definisi": "Titik pusat adalah titik yang berada tepat di tengah lingkaran.",
-        "simbol": "O",
-        "contoh": "Titik tengah pada sebuah lingkaran."
+        "definisi": "Titik pusat adalah titik yang berada tepat di tengah lingkaran. Pada gambar, titik pusat diberi nama O.",
+        "rumus": "Dilambangkan dengan titik O."
     },
-
-    "Jari-Jari": {
-        "definisi": "Jari-jari adalah garis dari titik pusat lingkaran menuju satu titik pada keliling lingkaran.",
-        "simbol": "r",
-        "contoh": "Garis dari titik O menuju titik pada keliling."
+    "Jari-jari": {
+        "definisi": "Jari-jari adalah garis yang menghubungkan titik pusat lingkaran dengan satu titik pada keliling lingkaran.",
+        "rumus": "r = d ÷ 2"
     },
-
     "Diameter": {
-        "definisi": "Diameter adalah garis lurus yang melalui titik pusat dan menghubungkan dua titik pada keliling lingkaran.",
-        "simbol": "d",
-        "contoh": "Panjang diameter adalah dua kali jari-jari."
+        "definisi": "Diameter adalah garis lurus yang melewati titik pusat dan menghubungkan dua titik pada keliling lingkaran.",
+        "rumus": "d = 2 × r"
     },
-
     "Tali Busur": {
         "definisi": "Tali busur adalah garis lurus yang menghubungkan dua titik pada keliling lingkaran.",
-        "simbol": "-",
-        "contoh": "Garis lurus yang menghubungkan titik A dan B."
+        "rumus": "Tidak harus melewati titik pusat."
     },
-
     "Busur": {
         "definisi": "Busur adalah garis lengkung yang merupakan bagian dari keliling lingkaran.",
-        "simbol": "-",
-        "contoh": "Bagian lengkung antara dua titik pada keliling."
+        "rumus": "Bagian dari keliling lingkaran."
     },
-
     "Juring": {
-        "definisi": "Juring adalah daerah dalam lingkaran yang dibatasi oleh dua jari-jari dan sebuah busur.",
-        "simbol": "-",
-        "contoh": "Bentuknya seperti potongan pizza."
+        "definisi": "Juring adalah daerah di dalam lingkaran yang dibatasi oleh dua jari-jari dan satu busur.",
+        "rumus": "Berbentuk seperti potongan kue."
     },
-
     "Tembereng": {
-        "definisi": "Tembereng adalah daerah dalam lingkaran yang dibatasi oleh sebuah tali busur dan busur lingkaran.",
-        "simbol": "-",
-        "contoh": "Daerah di antara tali busur dan busur."
-    },
-
-    "Apotema": {
-        "definisi": "Apotema adalah garis dari titik pusat lingkaran yang tegak lurus terhadap tali busur.",
-        "simbol": "-",
-        "contoh": "Jarak terpendek titik pusat terhadap tali busur."
+        "definisi": "Tembereng adalah daerah di dalam lingkaran yang dibatasi oleh satu tali busur dan satu busur lingkaran.",
+        "rumus": "Berada di antara tali busur dan busur."
     }
 }
 
-# ==========================================
-# 4. FUNGSI GAMBAR LINGKARAN
-# ==========================================
-
-def gambar_lingkaran(pilihan):
-
-    fig, ax = plt.subplots(figsize=(6, 6))
-
-    fig.patch.set_facecolor("#F7FAF5")
-    ax.set_facecolor("#F7FAF5")
-
-    hijau = "#214D35"
-    kuning = "#F2B632"
-    biru = "#3996C5"
-
-    O = np.array([0.0, 0.0])
-
-    # Lingkaran utama
-    lingkaran = Circle(
-        O, 1,
-        fill=False,
-        color=hijau,
-        linewidth=3
-    )
-
-    ax.add_patch(lingkaran)
-
-    # Koordinat bantu
-    A = np.array([
-        np.cos(np.radians(45)),
-        np.sin(np.radians(45))
-    ])
-
-    B = np.array([
-        np.cos(np.radians(-45)),
-        np.sin(np.radians(-45))
-    ])
-
-    # Titik pusat
-    if pilihan == "Titik Pusat":
-
-        ax.scatter(
-            0, 0,
-            s=350,
-            color=kuning,
-            edgecolors="#C58A16",
-            linewidths=2,
-            zorder=10
-        )
-
-        ax.text(
-            0.08, 0.08,
-            "O (Pusat)",
-            fontsize=12,
-            color=hijau,
-            fontweight="bold"
-        )
-
-    # Jari-jari
-    elif pilihan == "Jari-Jari":
-
-        ax.plot(
-            [0, 1], [0, 0],
-            color=kuning,
-            linewidth=5,
-            solid_capstyle="round"
-        )
-
-        ax.text(0.5, 0.08, "r", fontsize=15,
-                color=hijau, fontweight="bold")
-
-        ax.scatter(0, 0, color=hijau, s=40, zorder=5)
-
-    # Diameter
-    elif pilihan == "Diameter":
-
-        ax.plot(
-            [-1, 1], [0, 0],
-            color=kuning,
-            linewidth=5,
-            solid_capstyle="round"
-        )
-
-        ax.text(0, 0.08, "d", fontsize=16,
-                ha="center", color=hijau,
-                fontweight="bold")
-
-    # Tali busur
-    elif pilihan == "Tali Busur":
-
-        y = 0.5
-        x = np.sqrt(1-y**2)
-
-        ax.plot(
-            [-x, x], [y, y],
-            color=kuning,
-            linewidth=5,
-            solid_capstyle="round"
-        )
-
-        ax.scatter([-x, x], [y, y],
-                   color=biru, s=55, zorder=5)
-
-        ax.text(0, y+0.09, "Tali Busur",
-                ha="center", color=hijau,
-                fontsize=11)
-
-    # Busur
-    elif pilihan == "Busur":
-
-        busur = np.linspace(25, 100, 100)
-
-        x = np.cos(np.radians(busur))
-        y = np.sin(np.radians(busur))
-
-        ax.plot(
-            x, y,
-            color=kuning,
-            linewidth=7,
-            solid_capstyle="round"
-        )
-
-    # Juring
-    elif pilihan == "Juring":
-
-        juring = Wedge(
-            O, 1,
-            25, 100,
-            facecolor=kuning,
-            alpha=0.65,
-            edgecolor="#C58A16",
-            linewidth=2
-        )
-
-        ax.add_patch(juring)
-
-        ax.plot(
-            [0, np.cos(np.radians(25))],
-            [0, np.sin(np.radians(25))],
-            color=hijau, linewidth=2
-        )
-
-        ax.plot(
-            [0, np.cos(np.radians(100))],
-            [0, np.sin(np.radians(100))],
-            color=hijau, linewidth=2
-        )
-
-        ax.text(
-            0.45, 0.45,
-            "Juring",
-            fontsize=13,
-            color=hijau,
-            fontweight="bold"
-        )
-
-    # Tembereng
-    elif pilihan == "Tembereng":
-
-        sudut = np.linspace(30, 150, 100)
-
-        busur_x = np.cos(np.radians(sudut))
-        busur_y = np.sin(np.radians(sudut))
-
-        titik = np.column_stack((
-            np.concatenate([busur_x, [busur_x[-1], busur_x[0]]]),
-            np.concatenate([busur_y, [busur_y[-1], busur_y[0]]])
-        ))
-
-        area = Polygon(
-            titik,
-            closed=True,
-            facecolor=kuning,
-            alpha=0.75,
-            edgecolor="#C58A16",
-            linewidth=2
-        )
-
-        ax.add_patch(area)
-
-        ax.plot(
-            [busur_x[0], busur_x[-1]],
-            [busur_y[0], busur_y[-1]],
-            color=hijau,
-            linewidth=3
-        )
-
-        ax.text(
-            0, 0.82,
-            "Tembereng",
-            fontsize=12,
-            ha="center",
-            color=hijau,
-            fontweight="bold"
-        )
-
-    # Apotema
-    elif pilihan == "Apotema":
-
-        y = 0.5
-        x = np.sqrt(1-y**2)
-
-        ax.plot(
-            [-x, x], [y, y],
-            color=biru,
-            linewidth=3
-        )
-
-        ax.plot(
-            [0, 0], [0, y],
-            color=kuning,
-            linewidth=5
-        )
-
-        # Tanda sudut siku-siku
-        ax.plot(
-            [0, 0.08, 0.08],
-            [0.5, 0.5, 0.58],
-            color=hijau,
-            linewidth=2
-        )
-
-        ax.scatter(0, 0, color=hijau, s=40)
-
-        ax.text(
-            0.08, 0.25,
-            "Apotema",
-            fontsize=11,
-            color=hijau,
-            fontweight="bold"
-        )
-
-    # Titik pusat selalu terlihat
-    if pilihan != "Titik Pusat":
-        ax.scatter(
-            0, 0,
-            color=hijau,
-            s=45,
-            zorder=10
-        )
-        ax.text(
-            -0.12, -0.12,
-            "O",
-            fontsize=12,
-            color=hijau,
-            fontweight="bold"
-        )
-
-    ax.set_xlim(-1.3, 1.3)
-    ax.set_ylim(-1.3, 1.3)
-    ax.set_aspect("equal")
-    ax.axis("off")
-
-    plt.tight_layout()
-
-    return fig
-
-
-# ==========================================
-# 5. JUDUL APLIKASI
-# ==========================================
-
-st.title("⭕ Mengenal Unsur-Unsur Lingkaran")
-
-st.markdown("""
-Selamat datang di media pembelajaran matematika!
-
-Yuk, kenali bagian-bagian lingkaran dengan cara
-yang menyenangkan. Pilih salah satu unsur dan
-perhatikan lampu yang menyala!
-""")
-
-st.divider()
-
-# ==========================================
-# 6. PILIHAN UNSUR
-# ==========================================
-
-st.subheader("💡 Pilih Unsur Lingkaran")
+# =========================
+# PILIH UNSUR
+# =========================
 
 pilihan = st.selectbox(
-    "Unsur lingkaran:",
+    "Pilih unsur lingkaran yang ingin dipelajari:",
     list(unsur.keys())
 )
 
-# ==========================================
-# 7. LAMPU LED KETAP-KETIP
-# ==========================================
+# =========================
+# GAMBAR LINGKARAN SVG
+# =========================
 
-nama_lampu = list(unsur.keys())
+def kelas(nama):
+    return "blink" if pilihan == nama else ""
 
-lampu_html = ""
+svg = f"""
+<svg viewBox="0 0 500 450"
+     xmlns="http://www.w3.org/2000/svg"
+     width="100%" height="430">
 
-for i, nama in enumerate(nama_lampu):
+    <!-- Lingkaran utama -->
+    <circle cx="250" cy="220" r="150"
+            fill="#F5FAF3"
+            stroke="#214D35"
+            stroke-width="4"/>
 
-    aktif = nama == pilihan
+    <!-- Tembereng -->
+    <g class="{kelas('Tembereng')}">
+        <path d="M 372.9 306.0
+                 A 150 150 0 0 1 211.2 365.0
+                 L 372.9 306.0 Z"
+              fill="#F4C95D"
+              fill-opacity="0.55"
+              stroke="#D49B19"
+              stroke-width="2"/>
+    </g>
 
-    warna = "#FFD700" if aktif else "#AAB5AA"
+    <!-- Juring -->
+    <g class="{kelas('Juring')}">
+        <path d="M 250 220
+                 L 364.9 123.6
+                 A 150 150 0 0 1 391 169
+                 Z"
+              fill="#7DBB91"
+              fill-opacity="0.55"
+              stroke="#398052"
+              stroke-width="2"/>
+    </g>
 
-    efek = "active" if aktif else "inactive"
+    <!-- Diameter -->
+    <g class="{kelas('Diameter')}">
+        <line x1="100" y1="220"
+              x2="400" y2="220"
+              stroke="#E05B4B"
+              stroke-width="5"
+              stroke-linecap="round"/>
+    </g>
 
-    lampu_html += f"""
-    <div class="lampu-item">
-        <div class="lampu {efek}"
-             style="--warna:{warna};
-                    animation-delay:{i * 0.15}s;">
-        </div>
+    <!-- Jari-jari -->
+    <g class="{kelas('Jari-jari')}">
+        <line x1="250" y1="220"
+              x2="364.9" y2="123.6"
+              stroke="#2877C7"
+              stroke-width="5"
+              stroke-linecap="round"/>
+    </g>
 
-        <div class="lampu-label">
-            {nama}
-        </div>
-    </div>
-    """
+    <!-- Tali busur -->
+    <g class="{kelas('Tali Busur')}">
+        <line x1="372.9" y1="306"
+              x2="211.2" y2="365"
+              stroke="#9B59B6"
+              stroke-width="5"
+              stroke-linecap="round"/>
+    </g>
 
-st.markdown("""
+    <!-- Busur -->
+    <g class="{kelas('Busur')}">
+        <path d="M 372.9 306
+                 A 150 150 0 0 1 211.2 365"
+              fill="none"
+              stroke="#E58A22"
+              stroke-width="7"
+              stroke-linecap="round"/>
+    </g>
+
+    <!-- Titik pusat -->
+    <g class="{kelas('Titik Pusat')}">
+        <circle cx="250" cy="220" r="8"
+                fill="#E04444"
+                stroke="#FFFFFF"
+                stroke-width="2"/>
+    </g>
+
+    <!-- Titik-titik penanda -->
+    <circle cx="100" cy="220" r="4" fill="#214D35"/>
+    <circle cx="400" cy="220" r="4" fill="#214D35"/>
+    <circle cx="364.9" cy="123.6" r="4" fill="#214D35"/>
+    <circle cx="372.9" cy="306" r="4" fill="#214D35"/>
+    <circle cx="211.2" cy="365" r="4" fill="#214D35"/>
+
+    <!-- Label -->
+    <text x="262" y="211" font-size="17"
+          font-weight="bold" fill="#214D35">O</text>
+
+    <text x="315" y="160" font-size="15"
+          fill="#2877C7">r</text>
+
+    <text x="250" y="205" font-size="13"
+          fill="#E05B4B"> </text>
+
+    <text x="245" y="242" font-size="13"
+          fill="#214D35">Pusat</text>
+
+    <text x="244" y="80" font-size="17"
+          font-weight="bold" fill="#214D35">LINGKARAN</text>
+
+</svg>
+"""
+
+# =========================
+# ANIMASI BERKEDIP
+# =========================
+
+css = """
 <style>
-
-.lampu-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 18px;
-    background: #214D35;
-    padding: 25px 12px;
-    border-radius: 18px;
-    margin: 15px 0;
+body {
+    margin: 0;
+    background: transparent;
 }
 
-.lampu-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    min-width: 75px;
+svg {
+    display: block;
+    margin: auto;
 }
 
-.lampu {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: var(--warna);
+.blink {
+    animation: berkedip 0.8s infinite alternate;
 }
 
-.lampu.active {
-    animation: kedip 0.8s infinite alternate;
-}
-
-.lampu.inactive {
-    opacity: 0.35;
-}
-
-.lampu-label {
-    color: white;
-    font-size: 11px;
-    font-weight: bold;
-    text-align: center;
-}
-
-@keyframes kedip {
+@keyframes berkedip {
     from {
         opacity: 0.25;
-        box-shadow: 0 0 3px var(--warna);
-        transform: scale(0.8);
+        filter: drop-shadow(0px 0px 0px transparent);
     }
-
     to {
         opacity: 1;
-        box-shadow:
-            0 0 10px var(--warna),
-            0 0 25px var(--warna),
-            0 0 40px var(--warna);
-        transform: scale(1.25);
+        filter: drop-shadow(0px 0px 9px #F2B705);
     }
 }
-
 </style>
-""", unsafe_allow_html=True)
+"""
 
-st.markdown(
-    f"""
-    <div class="lampu-container">
-        {lampu_html}
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+html = f"""
+<html>
+<head>{css}</head>
+<body>
+{svg}
+</body>
+</html>
+"""
 
-st.markdown(
-    f"""
-    <h3 style="text-align:center;color:#214D35;">
-        ✨ {pilihan.upper()} ✨
-    </h3>
-    """,
-    unsafe_allow_html=True
-)
+# =========================
+# TAMPILAN UTAMA
+# =========================
 
-# ==========================================
-# 8. VISUALISASI DAN PENJELASAN
-# ==========================================
+kiri, kanan = st.columns([1.5, 1])
 
-st.divider()
+with kiri:
+    st.subheader("Visualisasi Lingkaran")
 
-col1, col2 = st.columns([1.2, 1])
+    components.html(
+        html,
+        height=450,
+        scrolling=False
+    )
 
-with col1:
+    st.caption(
+        "Amati bagian yang berkedip pada gambar lingkaran."
+    )
 
-    st.subheader("🔵 Visualisasi Lingkaran")
-
-    fig = gambar_lingkaran(pilihan)
-
-    st.pyplot(fig, use_container_width=True)
-
-    plt.close(fig)
-
-with col2:
-
-    st.subheader(f"📖 {pilihan}")
+with kanan:
+    st.subheader("Yuk, Pelajari!")
 
     st.markdown(
         f"""
-        <div class="info-card">
-            <h4>Pengertian</h4>
-            <p>{unsur[pilihan]['definisi']}</p>
-            <hr>
-            <h4>Contoh</h4>
-            <p>{unsur[pilihan]['contoh']}</p>
-            <h4>Simbol</h4>
-            <p>{unsur[pilihan]['simbol']}</p>
+        <div class="keterangan">
+            <h3>{pilihan}</h3>
+            <p>{unsur[pilihan]["definisi"]}</p>
+            <b>{unsur[pilihan]["rumus"]}</b>
         </div>
         """,
         unsafe_allow_html=True
     )
 
+    st.write("")
+    st.success(
+        f"Sekarang bagian **{pilihan}** sedang ditampilkan."
+    )
+
 st.divider()
 
-# ==========================================
-# 9. KUIS PILIHAN GANDA
-# ==========================================
-
-st.subheader("🎯 Ayo Berlatih!")
-
-st.write(
-    "Jawablah pertanyaan berikut untuk menguji pemahamanmu."
+st.markdown(
+    """
+    <div style="text-align:center; color:#55745D;">
+        <b>Media Pembelajaran Matematika</b><br>
+        Mengenal Unsur-Unsur Lingkaran
+    </div>
+    """,
+    unsafe_allow_html=True
 )
-
-soal = {
-    "Garis dari titik pusat menuju keliling lingkaran disebut ...": [
-        "Diameter",
-        "Jari-Jari",
-        "Busur",
-        "Tembereng"
-    ],
-
-    "Daerah yang dibatasi dua jari-jari dan sebuah busur disebut ...": [
-        "Tali Busur",
-        "Apotema",
-        "Juring",
-        "Diameter"
-    ],
-
-    "Garis yang melalui titik pusat dan menghubungkan dua titik pada keliling disebut ...": [
-        "Busur",
-        "Diameter",
-        "Juring",
-        "Apotema"
-    ],
-
-    "Garis lurus yang menghubungkan dua titik pada keliling disebut ...": [
-        "Tali Busur",
-        "Juring",
-        "Jari-Jari",
-        "Tembereng"
-    ],
-
-    "Daerah yang dibatasi tali busur dan busur disebut ...": [
-        "Apotema",
-        "Tembereng",
-        "Diameter",
-        "Jari-Jari"
-    ]
-}
-
-kunci = [
-    "Jari-Jari",
-    "Juring",
-    "Diameter",
-    "Tali Busur",
-    "Tembereng"
-]
-
-if "hasil_kuis" not in st.session_state:
-    st.session_state.hasil_kuis = False
-
-jawaban = []
-
-with st.form("form_kuis"):
-
-    for i, (pertanyaan, opsi) in enumerate(soal.items()):
-
-        st.markdown(f"**{i+1}. {pertanyaan}**")
-
-        jawab = st.radio(
-            "Pilih jawaban:",
-            opsi,
-            key=f"jawaban_{i}",
-            index=None
-        )
-
-        jawaban.append(jawab)
-
-    periksa = st.form_submit_button("Periksa Jawaban")
-
-if periksa:
-
-    if any(j is None for j in jawaban):
-
-        st.warning("Silakan jawab semua soal terlebih dahulu.")
-
-    else:
-
-        skor = sum(
-            1 for i in range(len(kunci))
-            if jawaban[i] == kunci[i]
-        )
-
-        nilai = int(skor / len(kunci) * 100)
-
-        st.session_state.hasil_kuis = True
-        st.session_state.skor = skor
-        st.session_state.nilai = nilai
-        st.session_state.jawaban_akhir = jawaban
-
-if st.session_state.hasil_kuis:
-
-    st.divider()
-
-    st.subheader("📊 Hasil Belajarmu")
-
-    st.metric(
-        "Nilai Akhir",
-        st.session_state.nilai
-    )
-
-    st.write(
-        f"Jawaban benar: {st.session_state.skor} dari {len(kunci)} soal."
-    )
-
-    for i, benar in enumerate(kunci):
-
-        if st.session_state.jawaban_akhir[i] == benar:
-
-            st.success(f"Soal {i+1}: Benar!")
-
-        else:
-
-            st.error(
-                f"Soal {i+1}: Salah. "
-                f"Jawaban benar: {benar}"
-            )
-
-    if st.session_state.nilai >= 80:
-        st.balloons()
-        st.success("Hebat! Kamu sudah memahami unsur lingkaran!")
-
-    else:
-        st.info("Tetap semangat! Yuk, pelajari kembali materinya.")
-
-    if st.button("Ulangi Kuis"):
-
-        st.session_state.hasil_kuis = False
-
-        for i in range(len(kunci)):
-            if f"jawaban_{i}" in st.session_state:
-                del st.session_state[f"jawaban_{i}"]
-
-        st.rerun()
-
-# ==========================================
-# 10. PENUTUP
-# ==========================================
-
-st.divider()
-
-st.markdown("""
-<div style="
-    background-color:#DDEFE0;
-    padding:18px;
-    border-radius:15px;
-    text-align:center;
-    color:#214D35;
-">
-    <h3>🌻 Selamat Belajar! 🌻</h3>
-    <p>Matematika menjadi lebih menyenangkan
-    ketika kita belajar sambil mencoba.</p>
-</div>
-""", unsafe_allow_html=True)
